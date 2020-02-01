@@ -10,4 +10,9 @@ offset = Vector2( 32, 32 )
 script = ExtResource( 2 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
+current = true
+limit_smoothed = true
+drag_margin_h_enabled = false
+drag_margin_v_enabled = false
+smoothing_enabled = true
 

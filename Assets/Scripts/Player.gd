@@ -24,6 +24,14 @@ func get_input():
     move_left()
   elif Input.is_action_pressed("right"):
     move_right()
+  elif Input.is_action_pressed("zoom_in"):
+    var cam = get_node("Camera2D")
+    var vec = Vector2(0.1, 0.1)
+    cam.zoom += vec;
+  elif Input.is_action_pressed("zoom_out"):
+    var cam = get_node("Camera2D")
+    var vec = Vector2(0.1, 0.1)
+    cam.zoom -= vec;
 
 func update_pos(posx, posy):
   mapx = posx
