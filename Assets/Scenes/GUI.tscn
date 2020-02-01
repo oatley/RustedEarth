@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/Scripts/GUI.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Fonts/cnr.otf" type="DynamicFontData" id=2]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 32
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
@@ -17,8 +21,6 @@ font_data = ExtResource( 2 )
 
 [node name="GUI" type="MarginContainer"]
 anchor_right = 1.0
-anchor_bottom = 1.0
-margin_bottom = -418.0
 custom_constants/margin_right = 20
 custom_constants/margin_top = 20
 custom_constants/margin_left = 20
@@ -29,7 +31,7 @@ script = ExtResource( 1 )
 margin_left = 20.0
 margin_top = 20.0
 margin_right = 1004.0
-margin_bottom = 162.0
+margin_bottom = 171.0
 
 [node name="TitleHbox" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 984.0
@@ -37,18 +39,31 @@ margin_bottom = 65.0
 alignment = 1
 
 [node name="Title" type="Label" parent="VBoxContainer/TitleHbox"]
-margin_left = 387.0
-margin_right = 597.0
+margin_left = 282.0
+margin_right = 702.0
 margin_bottom = 65.0
 custom_fonts/font = SubResource( 1 )
-text = "Repair"
+text = "Rusted Earth"
 align = 1
 uppercase = true
 
-[node name="ButtonsHbox" type="HBoxContainer" parent="VBoxContainer"]
+[node name="MapSelectionHbox" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 69.0
 margin_right = 984.0
 margin_bottom = 108.0
+alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/MapSelectionHbox"]
+margin_left = 363.0
+margin_right = 620.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 4 )
+text = "Select a Map"
+
+[node name="ButtonsHbox" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 112.0
+margin_right = 984.0
+margin_bottom = 151.0
 custom_constants/separation = 32
 alignment = 1
 

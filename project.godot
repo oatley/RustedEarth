@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="repair"
+config/name="Rusted Earth"
 run/main_scene="res://Assets/Scenes/Main.tscn"
 config/icon="res://icon.png"
 

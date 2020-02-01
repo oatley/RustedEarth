@@ -11,7 +11,9 @@ var sand_tile = load("res://Assets/Scenes/Sand.tscn")
 var tree_tile = load("res://Assets/Scenes/Tree.tscn")
 var player_tile = load("res://Assets/Scenes/Player.tscn")
 
-var world_name = "meow4"
+var world_name = "land1"
+var world_size_x
+var world_size_y
 var map_size = 50
 var tile_size = 32 # Sprite size
 var player
@@ -21,16 +23,14 @@ func _ready():
   """meow"""
 
 func play():
-  var map_level_x = 1
-  var map_level_y = 1
   gui.hide()
   load_world()
-  for x in range(-map_level_x, map_level_x+1):
-    for y in range(-map_level_y, map_level_y+1):
+  for x in range(-world_size_x, world_size_x+1):
+    for y in range(-world_size_y, world_size_y+1):
       var map_name = str(x)+"x"+str(y)+"x"+"0"
       print(map_name)
       load_map(map_name)
-      draw_map_tiles(map_name)
+      draw_map_tiles(map_name) # can you only draw map tiles of the closest 5?
   add_player("0x0x0") 
 
 func load_world():
@@ -40,6 +40,8 @@ func load_world():
   var json = JSON.parse(json_string)
   if json.error == OK:
     world = json.result
+    world_size_x = int(world["size_x"])
+    world_size_y = int(world["size_y"])
   else:
     print("error with json in world")
 
