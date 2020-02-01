@@ -1,6 +1,7 @@
 /target
 /.import
 /build
+/Build
 **/*.rs.bk
 Cargo.lock
 *.import
