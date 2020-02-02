@@ -1,4 +1,4 @@
-extends Sprite
+extends KinematicBody2D
 var tile_size = 32 # Sprite size
 var key
 var mapx
@@ -8,15 +8,24 @@ var map
 var world_level
 var light = false
 
+export (int) var speed = 200
+var velocity = Vector2()
+
+
 func _ready():
   disable_light()
   pass 
 
 func _process(delta):
-  delay += delta
-  if delay > 0.1:
-    delay = 0
-    get_input()
+  get_input()
+  velocity = velocity.normalized() * speed
+  velocity = move_and_slide(velocity)
+  
+#
+#  delay += delta
+#  if delay > 0.1:
+#    delay = 0
+    
     
 func get_input():
   if Input.is_action_pressed("up"):
@@ -27,7 +36,9 @@ func get_input():
     move_left()
   elif Input.is_action_pressed("right"):
     move_right()
-  elif Input.is_action_pressed("zoom_in"):
+  else:
+    velocity = Vector2(0,0)
+  if Input.is_action_pressed("zoom_in"):
     var cam = get_node("Camera2D")
     var vec = Vector2(0.1, 0.1)
     cam.zoom += vec;
@@ -71,21 +82,36 @@ func enable_light():
   $Light2D.enabled = true  
 
 func move_up():
-  mapy -= 1
-  position = Vector2(mapx * tile_size, mapy * tile_size)
+  velocity = Vector2()
+  velocity.y -= 1
   
 func move_down():
-  mapy += 1
-  position = Vector2(mapx * tile_size, mapy * tile_size)
+  velocity = Vector2()
+  velocity.y += 1
 
 func move_left():
-  mapx -= 1
-  position = Vector2(mapx * tile_size, mapy * tile_size)
-  
-func move_right():
-  mapx += 1
-  position = Vector2(mapx * tile_size, mapy * tile_size)
+  velocity = Vector2()
+  velocity.x -= 1
 
+func move_right():
+  velocity = Vector2()
+  velocity.x += 1
+
+#func move_up():
+#  mapy -= 1
+#  position = Vector2(mapx * tile_size, mapy * tile_size)
+#
+#func move_down():
+#  mapy += 1
+#  position = Vector2(mapx * tile_size, mapy * tile_size)
+#
+#func move_left():
+#  mapx -= 1
+#  position = Vector2(mapx * tile_size, mapy * tile_size)
+#
+#func move_right():
+#  mapx += 1
+#  position = Vector2(mapx * tile_size, mapy * tile_size)
 
 
 

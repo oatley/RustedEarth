@@ -7,11 +7,11 @@
 size = 64
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=5]
 size = 32
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=6]
 size = 32
 font_data = ExtResource( 2 )
 
@@ -54,11 +54,13 @@ margin_bottom = 108.0
 alignment = 1
 
 [node name="OptionButton" type="OptionButton" parent="VBoxContainer/MapSelectionHbox"]
-margin_left = 363.0
-margin_right = 620.0
+margin_left = 426.0
+margin_right = 557.0
 margin_bottom = 39.0
-custom_fonts/font = SubResource( 2 )
-text = "Select a Map"
+custom_fonts/font = SubResource( 5 )
+text = "land3"
+items = [ "land3", null, false, 0, null, "land4", null, false, 1, null ]
+selected = 0
 
 [node name="ButtonsHbox" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 112.0
@@ -71,7 +73,7 @@ alignment = 1
 margin_left = 383.0
 margin_right = 485.0
 margin_bottom = 39.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 6 )
 text = "Start"
 
 [node name="ButtonExit" type="Button" parent="VBoxContainer/ButtonsHbox"]

@@ -42,11 +42,11 @@ func _thread_clean_map(userdata):
         var map_child = get_node("/root/Main/Map/" + map_name)
         var map_children = map_child.get_children()
         # Call free on all children
-        call_deferred("free", map_child)
         print("[Cleanup] -> free map " + map_name)
         for child in map_children:
           if child:
             call_deferred("free", child)
+        call_deferred("free", map_child)
     print("[Cleanup] -> clean finished")
 
 func _exit_tree():

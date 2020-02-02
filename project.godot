@@ -73,6 +73,10 @@ light_toggle={
  ]
 }
 
+[memory]
+
+limits/message_queue/max_size_kb=512000
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

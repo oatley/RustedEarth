@@ -15,7 +15,7 @@ margin_bottom = 148.0
 [node name="Map" parent="." instance=ExtResource( 2 )]
 
 [node name="CanvasModulate" parent="Map" instance=ExtResource( 3 )]
-color = Color( 0.196078, 0.188235, 0.188235, 1 )
+color = Color( 0.168627, 0.160784, 0.160784, 1 )
 
 [node name="Cleanup" type="Node" parent="."]
 script = ExtResource( 4 )

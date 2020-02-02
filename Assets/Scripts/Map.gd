@@ -6,6 +6,7 @@ var maps = {} # map_name: {tile_key:tile}
 
 # Preloads and prefabs
 onready var gui = get_node("/root/Main/GUI")
+onready var option_button = get_node("/root/Main/GUI/VBoxContainer/MapSelectionHbox/OptionButton")
 var floor_tile = load("res://Assets/Scenes/Floor.tscn")
 var wall_tile = load("res://Assets/Scenes/Wall.tscn")
 var wall_black_tile = load("res://Assets/Scenes/Wall_black.tscn")
@@ -15,8 +16,9 @@ var sand_tile = load("res://Assets/Scenes/Sand.tscn")
 var tree_tile = load("res://Assets/Scenes/Tree.tscn")
 var player_tile = load("res://Assets/Scenes/Player.tscn")
 
+
 # Global vars
-var world_name = "land3"
+var world_name
 var world_size_x
 var world_size_y
 var world_level
@@ -31,6 +33,8 @@ func _ready():
 # Quick shortcut to run all loads
 # level changes the Z axis of the world to go underground 0 or -1
 func play(level):
+  var option = option_button.get_selected_id()
+  world_name = option_button.get_item_text(option)
   world_level = level
   gui.hide()
   if player:
@@ -39,7 +43,6 @@ func play(level):
   for x in range(-world_size_x, world_size_x+1):
     for y in range(-world_size_y, world_size_y+1):
       var map_name = str(x)+"x"+str(y)+"x"+str(world_level)
-      print(map_name)
       load_map(map_name)
       draw_map_tiles(map_name) # can you only draw map tiles of the closest 5?
   if not player:
@@ -71,13 +74,6 @@ func load_map(map_name):
   else:
     print("error with json in map", map_name)
 
-# Spawn player object
-func add_player(map_name):
-  player = player_tile.instance()
-  player.key = "player"
-  #player.map = maps[map_name]
-  player.update_pos(maps[map_name]["mapsize"]["x"] / 2, maps[map_name]["mapsize"]["y"] / 2)
-  add_child(player)
 
 # Contains all compatitble tiles within
 func draw_map_tiles(map_name):
@@ -115,7 +111,6 @@ func draw_map_tiles(map_name):
       t.position = update_pos(x, y, map_group_x, map_group_y)
       node.add_child(t)
     elif maps[map_name][key]['c'] == "t": # tree_tile
-      # Add a ground tile under the tree
       if maps[map_name]["default_floor"]['c'] == ',': # floors under trees
         var t = sand_tile.instance()
         t.position = update_pos(x, y, map_group_x, map_group_y)
@@ -127,6 +122,18 @@ func draw_map_tiles(map_name):
       var t = tree_tile.instance()
       t.position = update_pos(x, y, map_group_x, map_group_y)
       node.add_child(t)
+
+
+# Spawn player object
+func add_player(map_name):
+  player = player_tile.instance()
+  player.key = "player"
+  #player.map = maps[map_name]
+  player.update_pos(maps[map_name]["mapsize"]["x"] / 2, maps[map_name]["mapsize"]["y"] / 2)
+  add_child(player)
+
+func get_map():
+  pass
 
 # Really hacky, relative positional calculation of tiles
 # Formula: x = mapx * tile_size + (tile_size * map_size * map_group_x)
@@ -154,6 +161,8 @@ func clear_level ():
       var map_child = get_node("/root/Main/Map/" + map_name)
       var map_children = map_child.get_children()
       for child in map_children:
+        if child.has_node("CollisionShape2D"):
+          child.get_node("CollisionShape2D").disabled = true
         child.hide()
   cleanup.clear_level(world_size_x, world_size_y, world_level)
 
