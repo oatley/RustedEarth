@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/2d/stone_wall_tile2.png" type="Texture" id=1]
+[ext_resource path="res://Assets/2d/stone_wall_tile_black.png" type="Texture" id=1]
 
 [sub_resource type="OccluderPolygon2D" id=1]
 polygon = PoolVector2Array( 1, 1, 63, 1, 63, 63, 1, 63 )
@@ -11,6 +11,5 @@ texture = ExtResource( 1 )
 offset = Vector2( 32, 32 )
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-visible = false
 occluder = SubResource( 1 )
 
