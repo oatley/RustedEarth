@@ -39,6 +39,7 @@ func _thread_clean_map(userdata):
     for x in range(-world_size_x, world_size_x+1):
       for y in range(-world_size_y, world_size_y+1):
         var map_name = str(x)+"x"+str(y)+"x"+str(world_level)
+        var compass = get_node("/root/Main/Map/Compass")
         var map_child = get_node("/root/Main/Map/" + map_name)
         var map_children = map_child.get_children()
         # Call free on all children
@@ -46,6 +47,7 @@ func _thread_clean_map(userdata):
         for child in map_children:
           if child:
             call_deferred("free", child)
+        call_deferred("free", compass)
         call_deferred("free", map_child)
     print("[Cleanup] -> clean finished")
 

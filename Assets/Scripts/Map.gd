@@ -15,6 +15,11 @@ var lava_tile = load("res://Assets/Scenes/Lava.tscn")
 var sand_tile = load("res://Assets/Scenes/Sand.tscn")
 var tree_tile = load("res://Assets/Scenes/Tree.tscn")
 var player_tile = load("res://Assets/Scenes/Player.tscn")
+var compass_tile = load("res://Assets/Scenes/Compass.tscn")
+var altar_tile = load("res://Assets/Scenes/Altar.tscn")
+var altar_corrupt_tile = load("res://Assets/Scenes/Altar_corrupt.tscn")
+var light_item_tile = load("res://Assets/Scenes/Light_item.tscn")
+var light_hole_tile = load("res://Assets/Scenes/Light_hole.tscn")
 
 
 # Global vars
@@ -22,6 +27,7 @@ var world_name
 var world_size_x
 var world_size_y
 var world_level
+var compass
 var map_size = 50
 var tile_size = 32 # Sprite size
 var player
@@ -47,8 +53,14 @@ func play(level):
       draw_map_tiles(map_name) # can you only draw map tiles of the closest 5?
   if not player:
     add_player("0x0x0")
+    get_node("/root/Main/CanvasLayer/Compass").show()
+  if world_level == 0:
+    spawn_entire_altar(22, 17, true, true)
+    spawn_entire_altar(45, 28, true, false)
+    #spawn_altar_hole(45, 30, true)
   player.z_index = 10 # if this is too low player hides behind map
   player.world_level = world_level
+  
 
 # Load world file, which contains map names and file paths unique each world
 func load_world():
@@ -123,6 +135,10 @@ func draw_map_tiles(map_name):
       t.position = update_pos(x, y, map_group_x, map_group_y)
       node.add_child(t)
 
+func add_compass():
+  print("adding compass")
+  compass = compass_tile.instance()
+  add_child(compass)
 
 # Spawn player object
 func add_player(map_name):
@@ -131,10 +147,81 @@ func add_player(map_name):
   #player.map = maps[map_name]
   player.update_pos(maps[map_name]["mapsize"]["x"] / 2, maps[map_name]["mapsize"]["y"] / 2)
   add_child(player)
+  player.enable_light()
+  get_node("/root/Main/CanvasLayer/Compass").player = player
 
 func get_map():
   pass
 
+func spawn_light(x, y):
+  if player.light:
+    return
+  var pos = update_pos(x, y, 0, 0)
+  var light_item = light_item_tile.instance()
+  light_item.position = pos
+  var upper_map = get_node("/root/Main/Map/0x0x0")
+  upper_map.add_child(light_item)
+
+func spawn_hole(x, y):
+  if player.light:
+    return
+  var pos = update_pos(x, y, 0, 0)
+  var light_hole = light_hole_tile.instance()
+  light_hole.position = pos
+  var upper_map = get_node("/root/Main/Map/0x0x0")
+  upper_map.add_child(light_hole)
+
+func spawn_hole_altar(x, y, corrupt):
+  spawn_altar(x-1, y, corrupt)
+  spawn_altar(x-1, y+1, corrupt)
+  spawn_altar(x-1, y-1, corrupt)
+  spawn_altar(x, y+1, corrupt)
+  spawn_altar(x+1, y, corrupt)
+  spawn_altar(x, y, corrupt)
+  # spawn hole thing
+  spawn_hole(x, y)
+  spawn_altar(x+1, y+1, corrupt)
+  spawn_altar(x+1, y-1, corrupt)
+
+func spawn_entire_altar(x, y, corrupt, dumb):
+  spawn_altar(x-1, y, corrupt)
+  spawn_altar(x-1, y+1, corrupt)
+  spawn_altar(x-1, y-1, corrupt)
+  spawn_altar(x, y+1, corrupt)
+  spawn_altar(x+1, y, corrupt)
+  spawn_altar(x, y, corrupt)
+  # spawn hole thing
+  if dumb:
+    spawn_light(x, y)
+  else:
+    spawn_hole(x,y)
+  spawn_altar(x+1, y+1, corrupt)
+  spawn_altar(x+1, y-1, corrupt)
+  #get_node("/root/Main/CanvasLayer/Compass").pos = update_pos(x,y,0,0)
+
+func spawn_altar_hole(x, y, corrupt):
+  var pos = update_pos(x, y, 0, 0)
+  var altar
+  if corrupt:
+    altar = altar_corrupt_tile.instance()
+  else:
+    altar = altar_tile.instance()
+  altar.position = pos
+  var upper_map = get_node("/root/Main/Map/0x0x0")
+  upper_map.add_child(altar)
+
+func spawn_altar(x, y, corrupt):
+  var pos = update_pos(x, y, 0, 0)
+  var altar
+  if corrupt:
+    altar = altar_corrupt_tile.instance()
+  else:
+    altar = altar_tile.instance()
+  altar.position = pos
+  var upper_map = get_node("/root/Main/Map/0x0x0")
+  upper_map.add_child(altar)
+  
+  
 # Really hacky, relative positional calculation of tiles
 # Formula: x = mapx * tile_size + (tile_size * map_size * map_group_x)
 func update_pos(posx, posy, map_group_x, map_group_y):
@@ -164,6 +251,8 @@ func clear_level ():
         if child.has_node("CollisionShape2D"):
           child.get_node("CollisionShape2D").disabled = true
         child.hide()
+  
+  get_node("/root/Main/CanvasLayer/Compass").hide()
   cleanup.clear_level(world_size_x, world_size_y, world_level)
 
 

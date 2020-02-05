@@ -7,19 +7,39 @@ var delay = 0.0
 var map
 var world_level
 var light = false
+var objective = Vector2(22.0 * 32, 17.0 * 32)
 
 export (int) var speed = 200
 var velocity = Vector2()
-
+var disable_move = false
 
 func _ready():
   disable_light()
+  get_node("/root/Main/CanvasLayer/Compass").pos = objective
   pass 
 
 func _process(delta):
   get_input()
+  
+func _physics_process(delta):
   velocity = velocity.normalized() * speed
-  velocity = move_and_slide(velocity)
+  #velocity = move_and_slide(velocity)
+  move_and_slide(velocity)
+  for i in get_slide_count():
+    var collision = get_slide_collision(i)
+    print(collision.collider.name)
+    if collision.collider.name == "LightItem":
+      light = true
+      $Light2D.scale = Vector2(1.0,1.0)
+      $Light2D.position = Vector2(0.0,0.0)
+      get_node("/root/Main/Map/0x0x0/LightItem").hide()
+      objective = Vector2(45.0*32,28.0*32)
+      get_node("/root/Main/CanvasLayer/Compass").pos = objective
+    if collision.collider.name == "LightHole" and light:
+      disable_move = true
+      enter_under()
+      disable_move = false
+    #print(collision.collider.name)
   
 #
 #  delay += delta
@@ -28,6 +48,8 @@ func _process(delta):
     
     
 func get_input():
+  if disable_move:
+    return
   if Input.is_action_pressed("up"):
     move_up()
   elif Input.is_action_pressed("down"):
@@ -55,14 +77,21 @@ func get_input():
     var map_node = get_node("/root/Main/Map")
     map_node.clear_level()
     map_node.play(-1)
-    if not light:
-      enable_light()
+    get_node("/root/Main/CanvasLayer/Compass").show()
+    enable_light()
   elif Input.is_action_pressed("up_stairs") and world_level == -1:
     var map_node = get_node("/root/Main/Map")
     map_node.clear_level()
     map_node.play(0)
-    if light:
-      disable_light()
+    get_node("/root/Main/CanvasLayer/Compass").show()
+    enable_light()
+
+func enter_under():
+  var map_node = get_node("/root/Main/Map")
+  map_node.clear_level()
+  map_node.play(-1)
+  get_node("/root/Main/CanvasLayer/Compass").show()
+  enable_light()
 
 func update_pos(posx, posy):
   mapx = posx
@@ -71,15 +100,13 @@ func update_pos(posx, posy):
 
 func disable_light():
   var mod = get_node("/root/Main/Map/CanvasModulate")
-  light = false
   mod.hide()
-  $Light2D.enabled = false
+  $Light2D.enabled = true
   
 func enable_light():
   var mod = get_node("/root/Main/Map/CanvasModulate")
-  light = true
   mod.show()
-  $Light2D.enabled = true  
+  $Light2D.enabled = true 
 
 func move_up():
   velocity = Vector2()

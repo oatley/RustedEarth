@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/Scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://Assets/2d/player.png" type="Texture" id=2]
-[ext_resource path="res://Assets/2d/player_light2.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Scenes/Light.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 25 )
@@ -24,12 +24,9 @@ drag_margin_h_enabled = false
 drag_margin_v_enabled = false
 smoothing_enabled = true
 
-[node name="Light2D" type="Light2D" parent="."]
-texture = ExtResource( 3 )
-offset = Vector2( 32, 32 )
-shadow_enabled = true
-shadow_filter = 1
-shadow_filter_smooth = 5.0
+[node name="Light2D" parent="." instance=ExtResource( 3 )]
+position = Vector2( 32, 32 )
+scale = Vector2( 0.1, 0.1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 32, 32 )
